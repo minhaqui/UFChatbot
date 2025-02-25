@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="results-container">
+    <h1>Sobre o Projeto</h1>
+
+    <div class="section sobre-projeto">
+        <h2>Introdução</h2>
+        <p>Este projeto foi desenvolvido para comparar, de forma cega, o desempenho de duas abordagens de LLM (Large Language Models, em português, Grandes Modelos de Linguagem) aplicadas ao domínio das contratações públicas no Brasil. Detalhes sobre os modelos foram suprimidos intencionalmente. A pesquisa investiga se a diferença entre as duas abordagens também afeta a preferência pelas respostas geradas para diferentes níveis de conhecimento sobre o assunto.</p>
+    </div>
+   
+    <div class="section sobre-metodologia">
+        <h2>Metodologia</h2>
+        <p>Os participantes interagem com a aplicação via chat, enviando perguntas relacionadas às contratações públicas. Cada sessão apresenta dois painéis de chat (Chat A e Chat B), nos quais os modelos (X e Y) são alocados aleatoriamente a cada nova conversa. A qualquer momento, os usuários podem avaliar a qualidade da interação por meio de botões e fornecer informações opcionais (nome, email e nível de proficiência). Os dados coletados são armazenados e posteriormente analisados utilizando métodos para determinar se existe uma vantagem significativa em utilizar um modelo em detrimento do outro.</p>
+    </div>
+
+    <div class="section sobre-analises">
+        <h2>Análises Estatísticas</h2>
+        <p>Abaixo está uma breve explicação das análises apresentadas na página de resultados:</p>
+        <ul>
+            <li><strong>Estatísticas Descritivas por Proficiência</strong>: Mostra médias, desvios padrão e contagens das preferências dos usuários, agrupadas por nível de conhecimento. Ajuda a ver como diferentes grupos avaliam as respostas sobre contratações públicas.</li>
+            <li><strong>Teste de Hipótese Nula</strong>: Verifica se a preferência por um modelo é diferente de 50%, com base nas respostas coletadas, usando proporção estimada, p-valor, intervalo de confiança e margem de erro. Serve para testar se há uma diferença significativa.</li>
+            <li><strong>Tabela de Avaliações Individuais</strong>: Lista até 20 avaliações anônimas, incluindo o modelo escolhido e o nível de proficiência do participante, oferecendo uma visão geral das escolhas feitas.</li>
+        </ul>
+    </div>
+
+    <div class="section contato">
+        <h2>Contato</h2>
+        <p>Se você tiver perguntas ou quiser saber mais, pode me contatar por email: bruno dot cmsilva at ufpe dot br.</p>
+    </div>
+
+    <button class="refresh-button" onclick="window.location.href='/'">Voltar ao Chat</button>
+</div>
+{% endblock %}

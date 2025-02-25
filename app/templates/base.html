@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Comparativo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('index') }}">Chat</a></li>
+            <li><a href="{{ url_for('resultados') }}">Ver Resultados</a></li>
+            <li><a href="{{ url_for('sobre') }}">Sobre</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <p><strong>Autor:</strong> Bruno Cipriano Minhaqui da Silva</p>
+        <p><strong>Email:</strong> bruno.cmsilva@ufpe.br</p>
+        <p><strong>Programa:</strong> Programa de Pós-Graduação Acadêmica do Centro de Informática da UFPE</p>
+        <p><strong>Data:</strong> Fevereiro de 2025</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

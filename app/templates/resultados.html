@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="results-container">
+    <h1>Resultados Preliminares</h1>
+
+    <div class="section analise-descritiva">
+        <h2>Estatísticas Descritivas por Proficiência</h2>
+        {{ desc_stats|safe }}
+    </div>
+
+    <div class="section teste-hipotese">
+        <h2>Teste de Hipótese Nula</h2>
+        {{ teste_hipotese|safe }}
+    </div>
+
+    <div class="section tabela-avaliacoes">
+        <h2>Avaliações Individuais (Anônimas)</h2>
+        {{ tabela_avaliacoes|safe }}
+    </div>
+
+    <button class="refresh-button" onclick="location.reload()">Atualizar Resultados</button>
+</div>
+{% endblock %}

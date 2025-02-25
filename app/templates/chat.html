@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="chat-container">
+    <h1>Chat Comparativo</h1>
+    <p>Faça perguntas sobre contratações públicas no Brasil e avalie as respostas dos Chats.</p>
+
+    <div class="chat-panels">
+        <div class="panel chat-a">
+            <h2>Chat A</h2>
+            <div id="resposta-a" class="resposta-box"></div>
+        </div>
+        <div class="panel chat-b">
+            <h2>Chat B</h2>
+            <div id="resposta-b" class="resposta-box"></div>
+        </div>
+    </div>
+
+    <form id="chat-form">
+        <textarea id="mensagem" placeholder="Digite sua pergunta ou problema..." rows="3" required></textarea>
+        <button type="submit" class="send-button">Enviar</button>
+        <button type="button" class="reset-button" onclick="resetChat()">Reiniciar</button>
+    </form>
+
+    <!-- Seção de Identificação (exibida antes da avaliação) -->
+    <div class="identificacao-section">
+        <h3>Identificação (opcional, mas o nível de proficiência é obrigatório)</h3>
+        <input type="text" id="nome" placeholder="Nome (opcional)">
+        <input type="email" id="email" placeholder="Email (opcional)">
+        <select id="proficiencia" required>
+            <option value="" disabled selected>Selecione seu nível de proficiência</option>
+            <option value="Iniciante">Iniciante</option>
+            <option value="Básico">Básico</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="Avançado">Avançado</option>
+            <option value="Especialista">Especialista</option>
+        </select>
+    </div>
+
+    <!-- Seção de Avaliação -->
+    <div id="avaliacao" class="avaliacao-section" style="display: none;">
+        <h3>Qual Conversa Você Prefere?</h3>
+        <button class="avaliacao-button" id="btn-chat-a" onclick="avaliar('Chat A')" disabled>Chat A</button>
+        <button class="avaliacao-button" id="btn-chat-b" onclick="avaliar('Chat B')" disabled>Chat B</button>
+        <p id="aviso-proficiencia" class="aviso-message" style="display: none;">Por favor, selecione seu nível de proficiência para votar.</p>
+        <div id="feedback" class="feedback-message" style="display: none;"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock %}

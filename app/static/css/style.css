@@ -1,0 +1,345 @@
+/* Global */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #c81724;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+.navbar li {
+    margin: 0 20px;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 18px;
+}
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Results Container */
+.results-container {
+    margin-top: 80px;
+    padding: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.results-container h1 {
+    color: #c81724;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.results-container h2 {
+    font-size: 22px;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #c81724;
+    padding-bottom: 5px;
+}
+.results-container p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+/* Dataframe */
+.dataframe {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 14px;
+}
+.dataframe th,
+.dataframe td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+.dataframe th {
+    background-color: #c81724;
+    color: white;
+    font-weight: bold;
+}
+.dataframe td {
+    background-color: #fff;
+}
+.dataframe tr:nth-child(even) td {
+    background-color: #f9f9f9;
+}
+
+/* Mensagem Insuficiente */
+.mensagem-insuficiente {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+/* Refresh Button */
+.refresh-button {
+    background-color: #c81724;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+}
+.refresh-button:hover {
+    background-color: #b01520;
+}
+
+/* Section */
+.section {
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .results-container {
+        margin-top: 60px;
+        padding: 15px;
+    }
+    .results-container h1 {
+        font-size: 24px;
+    }
+    .results-container h2 {
+        font-size: 20px;
+    }
+    .dataframe th,
+    .dataframe td {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Chat Container e Elementos de Chat (Atualizado) */
+.chat-container {
+    margin-top: 80px;
+    padding: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.chat-container h1 {
+    color: #c81724;
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.chat-container p {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.chat-panels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.panel {
+    width: 48%;
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.panel h2 {
+    color: #c81724;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.resposta-box {
+    min-height: 150px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+.resposta-box .user-message {
+    background-color: #075e54;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0 10px auto;
+    text-align: right;
+    display: block;
+    max-width: 70%;
+    float: right;
+    clear: both;
+    font-size: 16px;
+    font-weight: 400;
+}
+.resposta-box .model-message {
+    background-color: #ECE5DD;
+    color: #333;
+    padding: 8px 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    margin: 5px 0 10px 0;
+    text-align: left;
+    display: block;
+    max-width: 70%;
+    float: left;
+    clear: both;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Chat Form e Botões */
+#chat-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+#mensagem {
+    flex-grow: 1;
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    resize: vertical;
+    min-height: 60px;
+}
+.send-button,
+.reset-button {
+    background-color: #c81724;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.send-button {
+    border-radius: 0 5px 5px 0;
+}
+.reset-button {
+    margin-left: 10px;
+    border-radius: 5px;
+}
+.send-button:hover,
+.reset-button:hover {
+    background-color: #b01520;
+}
+
+/* Avaliação */
+#avaliacao {
+    text-align: center;
+}
+#avaliacao h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+#avaliacao button {
+    background-color: #c81724;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#avaliacao button:hover {
+    background-color: #b01520;
+}
+
+/* User Info */
+.user-info {
+    margin-top: 15px;
+}
+.user-info input,
+.user-info select {
+    padding: 8px;
+    margin: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #fafafa;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
+    color: #555;
+    margin-top: 20px;
+}
+.footer p {
+    margin: 5px 0;
+}
+
+/* Nota */
+.nota {
+    font-style: italic;
+    color: #666;
+}
+
+.btn-disabled {
+    background-color: #ccc !important;
+    color: #777 !important;
+    cursor: not-allowed;
+}
+
+.aviso-message {
+    color: #c62828;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+.feedback-message .erro {
+    color: #c62828;
+    font-weight: bold;
+}
+
+.feedback-message .sucesso {
+    color: #2e7d32;
+    font-weight: bold;
+}
