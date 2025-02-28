@@ -12,7 +12,7 @@ from google.cloud import storage
 import sys
 
 # Configurações
-EMBEDDED_DIR = "app/rag_data"
+EMBEDDED_DIR = "/app/rag_data"
 CHUNKS_JSON = os.path.join(EMBEDDED_DIR, "chunks.json")
 INDEX_PATH = os.path.join(EMBEDDED_DIR, "index.faiss")
 EMBEDDINGS_PATH = os.path.join(EMBEDDED_DIR, "embeddings.npy")

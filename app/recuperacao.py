@@ -15,7 +15,7 @@ os.environ["GRPC_TRACE"] = ""  # Desativa tracing do gRPC
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configurações
-EMBEDDED_DIR = "app/rag_data"
+EMBEDDED_DIR = "rag_data"
 INDEX_PATH = os.path.join(EMBEDDED_DIR, "index.faiss")
 EMBEDDINGS_PATH = os.path.join(EMBEDDED_DIR, "embeddings.npy")
 CHUNKS_JSON = os.path.join(EMBEDDED_DIR, "chunks.json")
@@ -85,7 +85,7 @@ def search_chunks(query, top_k=10, threshold=0.5):
     index = faiss.read_index("app/rag_data/index.faiss")
     with open("app/rag_data/chunks.json", "r", encoding="utf-8") as f:
         chunks = json.load(f)
-    from app.models import embed_query
+    from models import embed_query
     query_embedding = embed_query(query)
     distances, indices = index.search(query_embedding, top_k)
     relevant_chunks = [chunks[idx] for idx, dist in zip(indices[0], distances[0]) if dist < threshold]

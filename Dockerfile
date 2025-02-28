@@ -1,25 +1,40 @@
-# Usar a imagem base do Python 3.12 slim
-FROM python:3.12-slim
-
-# Definir o diretório de trabalho
+# Estágio de build
+FROM python:3.11-slim AS builder
 WORKDIR /app
 
-# Instalar ferramentas do sistema necessárias para compilação
+# Instalar dependências do sistema para compilação
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
     libblas-dev \
     liblapack-dev \
-    && rm -rf /var/lib/apt/lists/*
+    build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copiar o requirements.txt para o container
+# Copiar requirements e instalar as dependências (sem --prefix)
 COPY requirements.txt .
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Instalar as dependências listadas no requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Copiar os pacotes instalados para um diretório temporário
+RUN mkdir /install && cp -r /usr/local/lib/python3.11/site-packages /install/
 
-# Copiar o código da aplicação para o container
-COPY . .
+# Estágio final
+FROM python:3.11-slim
+WORKDIR /app
 
-# Definir o comando para rodar a aplicação com gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
+# Instalar dependências de runtime
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libblas3 \
+    liblapack3 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copiar os pacotes do estágio de build para o local padrão do Python
+COPY --from=builder /install/site-packages /usr/local/lib/python3.11/site-packages
+
+# **Copiar também os executáveis instalados (por exemplo, gunicorn)**
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copiar os arquivos da aplicação
+COPY app/ .
+
+# Comando de execução com Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "2", "--log-level", "debug", "main:app"]

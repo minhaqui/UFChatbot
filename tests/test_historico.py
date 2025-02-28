@@ -1,6 +1,6 @@
 import unittest
 import json
-from app.app import app, db, MensagemX, MensagemY, Conversa
+from app.main import app, db, MensagemX, MensagemY, Conversa
 
 class TestHistorico(unittest.TestCase):
 

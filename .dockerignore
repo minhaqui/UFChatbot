@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.env
+*.log
+app/instance/
+app/chat.db
+app/rag_data/arquivos/
+app/rag_data/arquivos_teste/
+app/rag_data/bkp/
+tests/
+visualizacao/
+*.git/
+*.pt
+*.bin
+*.idx
+*.bak
+*.csv

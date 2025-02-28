@@ -1,6 +1,6 @@
 import unittest
 import json
-from app.app import app, db, Conversa, MensagemX, MensagemY
+from app.main import app, db, Conversa, MensagemX, MensagemY
 
 class TestSendMessageFlow(unittest.TestCase):
     def setUp(self):

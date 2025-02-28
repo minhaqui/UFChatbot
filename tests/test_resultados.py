@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import pandas as pd
-from app.app import app
+from app.main import app
 
 class TestResultados(unittest.TestCase):
 

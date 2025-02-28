@@ -4,7 +4,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 import unittest
 import json
-from app.app import app, db, Conversa, MensagemX, MensagemY, Avaliacao, Proficiencia
+from app.main import app, db, Conversa, MensagemX, MensagemY, Avaliacao, Proficiencia
 
 class TestRoutes(unittest.TestCase):
     def setUp(self):

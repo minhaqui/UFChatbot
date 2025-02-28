@@ -5,14 +5,11 @@ python-dotenv
 pandas
 SQLAlchemy
 gunicorn
-Werkzeug
-Jinja2
-MarkupSafe
-itsdangerous
-click
-google-cloud-logging
-google-cloud-monitoring
 faiss-cpu
-sentence-transformers
 numpy
 requests
+scipy
+Werkzeug
+psycopg2-binary
+python-dotenv
+# sentence-transformers

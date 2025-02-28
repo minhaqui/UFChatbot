@@ -11,6 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
 # Configuração do modelo
 MODEL = "google/gemini-2.0-flash-001"
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -18,8 +19,10 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
+print(genai.__version__)
 # Carregar índice FAISS e chunks
-index = faiss.read_index("app/rag_data/index.faiss")
+index_path = os.path.join(os.path.dirname(__file__), "rag_data", "index.faiss")
+index = faiss.read_index(index_path)
 with open("app/rag_data/chunks.json", "r", encoding="utf-8") as f:
     chunks = json.load(f)
 
@@ -49,7 +52,7 @@ def generate_response(query, context_chunks=None):
             "Elabore uma resposta que possua uma breve introdução e ao final indique como o usuário pode se aprofundar sobre sua dúvida ou problema.\n"
             "Não responda sobre o tipo de modelo de LLM você é ou quais tecnologias está usando.\n"
             "Não responda sobre outros assuntos que não envolvam, direta ou indiretamente, contratações públicas no Brasil."
-            Forneça uma resposta à consulta: {query}\nContexto fornecido: {context}"
+            Forneça uma resposta curta à consulta: {query}\nContexto fornecido: {context}"
             """
     else:
         prompt = f"""
@@ -60,7 +63,7 @@ def generate_response(query, context_chunks=None):
             "Elabore uma resposta que possua uma breve introdução e ao final indique como o usuário pode se aprofundar sobre sua dúvida ou problema.\n"
             "Não responda sobre o tipo de modelo de LLM você é ou quais tecnologias está usando.\n"
             "Não responda sobre outros assuntos que não envolvam, direta ou indiretamente, contratações públicas no Brasil."
-            Forneça uma resposta à consulta: {query}"
+            Forneça uma resposta curta à consulta: {query}"
             """
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -125,8 +128,8 @@ def modelo_x_response(query, historico):
     return resposta
 
 def modelo_y_response(query, historico):
-    # Importa a função de RAG
     from app.recuperacao import search_chunks  
+    # Importa a função de RAG
     key = (query, tuple((msg['remetente'], msg['conteudo']) for msg in historico))
     if key in cache_y:
         return cache_y[key]
