@@ -189,6 +189,7 @@ body {
     text-align: center;
 }
 .resposta-box {
+    max-height: 500px;
     min-height: 150px;
     padding: 10px;
     background-color: white;

@@ -10,12 +10,11 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import math
-import hashlib
-
 import logging
+
 logging.basicConfig(level=logging.ERROR)
 
-FALLBACK_MSG = "Ainda não há dados suficientes para afirmar relevância estatística completa."
+FALLBACK_MSG = "Sem dados suficientes para análise."
 
 def anonimizar_nome(nome):
     if pd.isna(nome) or len(nome.strip()) < 2:
@@ -26,7 +25,7 @@ def anonimizar_nome(nome):
 def calculate_statistics(avaliacoes_df, conversas_df, proficiencias_df):
     # Renomeia as colunas de conversas_df se necessário
     if 'chat_a' not in conversas_df.columns and 'modelo_a' in conversas_df.columns:
-         conversas_df = conversas_df.rename(columns={'modelo_a': 'chat_a', 'modelo_b': 'chat_b'})
+        conversas_df = conversas_df.rename(columns={'modelo_a': 'chat_a', 'modelo_b': 'chat_b'})
     
     # Mescla os dataframes
     df = avaliacoes_df.merge(conversas_df, left_on='conversa_id', right_on='id', how='left')
@@ -39,27 +38,59 @@ def calculate_statistics(avaliacoes_df, conversas_df, proficiencias_df):
     # Mapeia o modelo vencedor: se "Chat A" então usa chat_a, senão chat_b
     df['modelo_vencedor'] = df.apply(lambda row: row['chat_a'] if row['modelo_vencedor'] == 'Chat A' else row['chat_b'], axis=1)
     
-    # Tabela de avaliações: usa data_hora se disponível
+    # Define as colunas necessárias para tabela_avaliacoes
     if 'data_hora' in df.columns:
-        tabela_avaliacoes = df[['data_hora', 'modelo_vencedor', 'nome', 'nivel']].copy()
-        tabela_avaliacoes.rename(columns={'data_hora': 'Data/Hora da Avaliação'}, inplace=True)
+        required_columns = ['data_hora', 'modelo_vencedor', 'nome', 'nivel']
     else:
-        tabela_avaliacoes = df[['conversa_id', 'modelo_vencedor', 'nome', 'nivel']].copy()
-        tabela_avaliacoes.rename(columns={'conversa_id': 'Data/Hora da Avaliação'}, inplace=True)
+        required_columns = ['conversa_id', 'modelo_vencedor', 'nome', 'nivel']
     
-    tabela_avaliacoes['nome'] = tabela_avaliacoes['nome'].apply(anonimizar_nome)
-    tabela_avaliacoes.columns = ['Data/Hora da Avaliação', 'Modelo Vencedor', 'Nome (Anonimizado)', 'Nível de Proficiência']
+    # Seleciona apenas as colunas desejadas
+    tabela_avaliacoes = df[required_columns].copy()
+    
+    # Renomeia as colunas (exatamente 4 colunas)
+    tabela_avaliacoes.columns = ['Data/Hora da Avaliação', 'Modelo Vencedor', 'Nome', 'Nível de Proficiência']
+    
+    # Anonimiza o nome e adiciona como nova coluna
+    tabela_avaliacoes['Nome (Anonimizado)'] = tabela_avaliacoes['Nome'].apply(anonimizar_nome)
+    
+    # Remove a coluna 'Nome' original
+    tabela_avaliacoes = tabela_avaliacoes.drop(columns=['Nome'])
+    
+    # Mapeia o Modelo Vencedor
+    tabela_avaliacoes['Modelo Vencedor'] = tabela_avaliacoes['Modelo Vencedor'].map({'X': 'Modelo X', 'Y': 'Modelo Y'})
+    
+    # Limita a 20 linhas
     tabela_avaliacoes = tabela_avaliacoes.head(20)
     
     # Estatísticas descritivas: calcular contagem de vitórias para os modelos Y e X, por nível
     desc_stats = df.groupby('nivel')['modelo_vencedor'].agg(
-        vit_y = lambda x: (x == 'Y').sum(),
-        vit_x = lambda x: (x == 'X').sum()
+        vit_y=lambda x: (x == 'Y').sum(),
+        vit_x=lambda x: (x == 'X').sum()
     ).reset_index()
-    desc_stats = desc_stats.rename(columns={'vit_y': 'Vitórias do Modelo Y', 'vit_x': 'Vitórias do Modelo X'})
+    desc_stats = desc_stats.rename(columns={'vit_x': 'Vitórias do Modelo X', 'vit_y': 'Vitórias do Modelo Y'})
     niveis = ['Iniciante', 'Básico', 'Intermediário', 'Avançado', 'Especialista']
     desc_stats = desc_stats.set_index('nivel').reindex(niveis, fill_value=0).reset_index()
     desc_stats = desc_stats.rename(columns={'nivel': 'Nível de Proficiência'})
+    
+    # Calcular totais diretamente das colunas
+    total_vitorias_x = desc_stats['Vitórias do Modelo X'].sum()
+    total_vitorias_y = desc_stats['Vitórias do Modelo Y'].sum()
+    
+    # Criar a linha total
+    total_row = pd.DataFrame([{
+        'Nível de Proficiência': 'Total',
+        'Vitórias do Modelo X': total_vitorias_x,
+        'Vitórias do Modelo Y': total_vitorias_y
+    }])
+    
+    # Concatenar ao desc_stats
+    desc_stats = pd.concat([desc_stats, total_row], ignore_index=True)
+    
+    # Adicionar a coluna "Y/X"
+    desc_stats['Y/X'] = desc_stats.apply(
+        lambda row: row['Vitórias do Modelo Y'] / row['Vitórias do Modelo X'] if row['Vitórias do Modelo X'] != 0 else 'N/A',
+        axis=1
+    )
     
     stats_dict = {}
     n_overall = len(df)
@@ -85,16 +116,16 @@ def calculate_statistics(avaliacoes_df, conversas_df, proficiencias_df):
         stats_dict['ic_superior'] = FALLBACK_MSG
     
     overall_test = {
-        "Segmento": "Geral",
+        "Segmento": "Total",
         "Tamanho da Amostra": n_overall,
-        "p̂": stats_dict['p_hat'],
-        "p-valor": stats_dict['p_valor'],
+        "Proporção Amostral p-hat": stats_dict['p_hat'],
+        "Valor-p": stats_dict['p_valor'],
         "Margem de Erro": stats_dict['margem_erro'],
         "Intervalo de Confiança": (f"[{stats_dict['ic_inferior']}, {stats_dict['ic_superior']}]" 
                                    if stats_dict['ic_inferior'] != FALLBACK_MSG 
                                    else FALLBACK_MSG),
-        "Significativo?": ( "Sim" if isinstance(stats_dict['p_valor'], (int, float)) and stats_dict['p_valor'] < 0.05 
-                            else ("Não" if isinstance(stats_dict['p_valor'], (int, float)) else FALLBACK_MSG))
+        "Significativo?": ("Sim" if isinstance(stats_dict['p_valor'], (int, float)) and stats_dict['p_valor'] < 0.05 
+                           else ("Não" if isinstance(stats_dict['p_valor'], (int, float)) else FALLBACK_MSG))
     }
     
     group_tests = []
@@ -113,8 +144,8 @@ def calculate_statistics(avaliacoes_df, conversas_df, proficiencias_df):
             group_tests.append({
                 "Segmento": nivel,
                 "Tamanho da Amostra": n_level,
-                "p̂": round(p_hat, 3),
-                "p-valor": round(p_valor, 3),
+                "Proporção Amostral p-hat": round(p_hat, 3),
+                "Valor-p": round(p_valor, 3),
                 "Margem de Erro": round(margin, 3),
                 "Intervalo de Confiança": ci,
                 "Significativo?": significant
@@ -123,14 +154,15 @@ def calculate_statistics(avaliacoes_df, conversas_df, proficiencias_df):
             group_tests.append({
                 "Segmento": nivel,
                 "Tamanho da Amostra": n_level,
-                "p̂": FALLBACK_MSG,
-                "p-valor": FALLBACK_MSG,
+                "Proporção Amostral p-hat": FALLBACK_MSG,
+                "Valor-p": FALLBACK_MSG,
                 "Margem de Erro": FALLBACK_MSG,
                 "Intervalo de Confiança": FALLBACK_MSG,
                 "Significativo?": FALLBACK_MSG
             })
     
-    teste_hipotese_df = pd.DataFrame([overall_test] + group_tests)
+    # Criar teste_hipotese_df com group_tests primeiro e overall_test no final
+    teste_hipotese_df = pd.DataFrame(group_tests + [overall_test])
     
     stats_dict.update({
         'desc_stats': desc_stats.to_html(index=False, classes='dataframe'),

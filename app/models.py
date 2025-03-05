@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 # Configuração do modelo
-MODEL = "google/gemini-2.0-flash-001"
+MODEL = "deepseek/deepseek-r1-distill-qwen-14b"
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -23,7 +23,7 @@ print(genai.__version__)
 # Carregar índice FAISS e chunks
 index_path = os.path.join(os.path.dirname(__file__), "rag_data", "index.faiss")
 index = faiss.read_index(index_path)
-with open("app/rag_data/chunks.json", "r", encoding="utf-8") as f:
+with open("rag_data/chunks.json", "r", encoding="utf-8") as f:
     chunks = json.load(f)
 
 cache_x = {}
@@ -46,7 +46,7 @@ def generate_response(query, context_chunks=None):
         context = " ".join(context_chunks)
         prompt = f"""     
             "Seu nome é Eniac Jr.\n"
-            "Você é um especialista em contratações públicas no Brasil bastante experiente, "
+            "Você é um especialista em contratações públicas no Brasil, "
             "especialmente treinado na lei 14.133/2021 e suas aplicações.\n"
             "Responda a pergunta em português formal, claro e conciso, usando bulletpoints quando couber.\n"
             "Elabore uma resposta que possua uma breve introdução e ao final indique como o usuário pode se aprofundar sobre sua dúvida ou problema.\n"
@@ -57,7 +57,7 @@ def generate_response(query, context_chunks=None):
     else:
         prompt = f"""
             "Seu nome é Eniac Jr.\n"
-            "Você é um especialista em contratações públicas no Brasil bastante experiente, "
+            "Você é um especialista em contratações públicas no Brasil, "
             "especialmente treinado na lei 14.133/2021 e suas aplicações.\n"
             "Responda a pergunta em português formal, claro e conciso, usando bulletpoints quando couber.\n"
             "Elabore uma resposta que possua uma breve introdução e ao final indique como o usuário pode se aprofundar sobre sua dúvida ou problema.\n"

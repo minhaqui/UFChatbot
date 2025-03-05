@@ -21,7 +21,7 @@ EMBEDDINGS_PATH = os.path.join(EMBEDDED_DIR, "embeddings.npy")
 CHUNKS_JSON = os.path.join(EMBEDDED_DIR, "chunks.json")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-OPENROUTER_MODEL = "google/gemini-2.0-flash-lite-preview-02-05:free"
+OPENROUTER_MODEL = "deepseek/deepseek-r1-distill-qwen-14b"
 GEMINI_EMBEDDING_MODEL_NAME = "models/embedding-001"
 
 def configure_gemini():
@@ -82,8 +82,8 @@ def search(query, index, texts, embeddings=None, top_k=10):
         raise
 
 def search_chunks(query, top_k=10, threshold=0.5):
-    index = faiss.read_index("app/rag_data/index.faiss")
-    with open("app/rag_data/chunks.json", "r", encoding="utf-8") as f:
+    index = faiss.read_index("rag_data/index.faiss")
+    with open("rag_data/chunks.json", "r", encoding="utf-8") as f:
         chunks = json.load(f)
     from models import embed_query
     query_embedding = embed_query(query)

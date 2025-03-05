@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="chat-container">
-    <h1>Chat Comparativo</h1>
-    <p>Faça perguntas sobre contratações públicas no Brasil e avalie as respostas dos Chats.</p>
+    <h1>Avaliação dos Modelos de Linguagem</h1>
+    <p>Avalie a qualidade dos Modelos de Linguagem sobre o tema contratações públicas no Brasil.</p>
 
     <div class="chat-panels">
         <div class="panel chat-a">
@@ -24,7 +24,7 @@
     <!-- Seção de Identificação (exibida antes da avaliação) -->
     <div class="identificacao-section">
         <h3>Identificação</h3>
-        <input type="text" id="nome" placeholder="Nome (opcional)">
+        <input type="text" id="nome" placeholder="Nome (obrigatório)" required>
         <input type="email" id="email" placeholder="Email (opcional)">
         <select id="proficiencia" required>
             <option value="" disabled selected>Selecione seu nível de proficiência</option>

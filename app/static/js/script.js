@@ -26,7 +26,7 @@ async function handleSubmit(event) {
 
     // Exibe a seção de avaliação
     document.getElementById('avaliacao').style.display = 'block';
-    checkProficiencia();
+    checkFields(); // Alterado de checkProficiencia para checkFields
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,20 +35,24 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', handleSubmit);
     }
     
-    document.getElementById('proficiencia').addEventListener('change', checkProficiencia);
+    // Adiciona eventos para verificar os campos em tempo real
+    document.getElementById('nome').addEventListener('input', checkFields);
+    document.getElementById('proficiencia').addEventListener('change', checkFields);
 });
 
-function checkProficiencia() {
+function checkFields() {
+    const nome = document.getElementById('nome').value.trim();
     const prof = document.getElementById('proficiencia').value;
     const btnA = document.getElementById('btn-chat-a');
     const btnB = document.getElementById('btn-chat-b');
     const aviso = document.getElementById('aviso-proficiencia');
-    if (prof === "") {
+    
+    if (nome === "" || prof === "") {
         btnA.disabled = true;
         btnB.disabled = true;
         btnA.classList.add('btn-disabled');
         btnB.classList.add('btn-disabled');
-        aviso.textContent = "Por favor, selecione seu nível de proficiência para votar.";
+        aviso.textContent = "Por favor, preencha o nome e selecione seu nível de proficiência para votar.";
         aviso.style.display = 'block';
     } else {
         btnA.disabled = false;
@@ -60,15 +64,17 @@ function checkProficiencia() {
 }
 
 function avaliar(modelo) {
+    const nome = document.getElementById('nome').value.trim();
     const prof = document.getElementById('proficiencia').value;
-    if (!prof) {
-        // Exibe uma mensagem de erro bonita na área de feedback
+    
+    // Verifica se os campos obrigatórios estão preenchidos
+    if (!nome || !prof) {
         const feedback = document.getElementById('feedback');
-        feedback.innerHTML = "<span class='erro'>Você precisa selecionar seu nível de proficiência para avaliar.</span>";
+        feedback.innerHTML = "<span class='erro'>Você precisa preencher o nome e selecionar seu nível de proficiência para avaliar.</span>";
         feedback.style.display = 'block';
         return;
     }
-    const nome = document.getElementById('nome').value.trim();
+    
     const email = document.getElementById('email').value.trim();
 
     fetch('/evaluate', {

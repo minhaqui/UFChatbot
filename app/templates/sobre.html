@@ -17,9 +17,18 @@
         <h2>Resultados</h2>
         <p>Abaixo está uma breve explicação das análises apresentadas na página de resultados:</p>
         <ul>
-            <li><strong>Estatísticas Descritivas por Proficiência</strong>: Mostra médias, desvios padrão e contagens das preferências dos usuários, agrupadas por nível de conhecimento. Ajuda a ver como diferentes grupos avaliam as respostas sobre contratações públicas.</li>
-            <li><strong>Teste de Hipótese Nula</strong>: Verifica se a preferência por um modelo é diferente de 50%, com base nas respostas coletadas, usando proporção estimada, p-valor, intervalo de confiança e margem de erro. Serve para testar se há uma diferença significativa.</li>
-            <li><strong>Tabela de Avaliações Individuais</strong>: Lista até 20 avaliações anônimas, incluindo o modelo escolhido e o nível de proficiência do participante, oferecendo uma visão geral das escolhas feitas.</li>
+            <li><strong>Tabela de Avaliações</strong>: Mostra a contagem de vitórias de cada modelo (Modelo X e Modelo Y) agrupada por nível de proficiência dos participantes. A coluna "Y/X" indica a razão entre as vitórias do Modelo Y e do Modelo X, sendo importante porque revela se um modelo é consistentemente preferido em relação ao outro em cada grupo, destacando a vantagem relativa de desempenho.</li>
+            <li><strong>Análises Estatísticas</strong>: Apresenta testes para verificar se a preferência por um modelo é significativamente diferente de 50%, com as seguintes colunas:
+                <ul>
+                    <li><strong>Proporção Amostral p-hat</strong>: Representa a porcentagem de vezes que o Modelo Y foi preferido, oferecendo uma estimativa inicial da preferência dos usuários.</li>
+                    <li><strong>Valor-p</strong>: Mostra a probabilidade de que a diferença observada ocorra por acaso. Um valor menor que 0,05 indica que a preferência é estatisticamente significativa.</li>
+                    <li><strong>Margem de Erro</strong>: Indica a variação esperada na proporção estimada, baseada em um nível de confiança de 95%, ajudando a avaliar a precisão dos resultados.</li>
+                    <li><strong>Intervalo de Confiança</strong>: Define a faixa onde a verdadeira proporção de preferência pelo Modelo Y deve estar, com 95% de confiança, oferecendo uma visão robusta da tendência.</li>
+                    <li><strong>Significativo?</strong>: Responde "Sim" ou "Não" com base no valor-p, resumindo se a preferência por um modelo é estatisticamente relevante.</li>
+                </ul>
+                Esses dados são essenciais para determinar se a preferência por um modelo é real ou apenas uma flutuação aleatória.
+            </li>
+            <li><strong>20 Últimas Avaliações</strong>: Lista as 20 avaliações mais recentes, com data/hora, modelo vencedor e nível de proficiência do participante. É importante porque permite identificar padrões ou tendências recentes nas preferências dos usuários, oferecendo uma visão atualizada das escolhas.</li>
         </ul>
     </div>
 
