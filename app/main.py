@@ -1,15 +1,15 @@
 import time
 from flask import Flask, render_template, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect, text
+from sqlalchemy import inspect, text, create_engine
 import os
 import random
 import uuid
 from dotenv import load_dotenv
-from app.db import db, Conversa, MensagemX, MensagemY, Avaliacao, Proficiencia
-from app.models import modelo_x_response, modelo_y_response
+from db import db, Conversa, MensagemX, MensagemY, Avaliacao, Proficiencia
+from models import modelo_x_response, modelo_y_response
 import pandas as pd
-from app.stats import calculate_statistics, FALLBACK_MSG
+from stats import calculate_statistics, FALLBACK_MSG
 # from app import create_app
 import sys
 from pathlib import Path
@@ -21,9 +21,15 @@ if str(BASE_DIR) not in sys.path:
 
 import logging
 
+def create_schema():
+    with db.engine.connect() as connection:
+        connection.execute(text("CREATE SCHEMA IF NOT EXISTS ufchatbot"))
+        connection.commit()
+
 def create_app():
     # Criar a instância do Flask dentro da função
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = "chaveecretaaaa111"
 
     # Configurar o logging para exibir no console
     logging.basicConfig(level=logging.DEBUG)
@@ -43,24 +49,15 @@ def create_app():
         raise ValueError("DATABASE_URL não está definido nas variáveis de ambiente.")
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"connect_args": {"options": "-csearch_path=ufchatbot"}}
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Inicializar o SQLAlchemy com a aplicação
     db.init_app(app)
-
-    # Criar tabelas no banco de dados, se necessário
+    
+    # Cria as tabelas dentro do contexto do aplicativo
     with app.app_context():
-        inspector = inspect(db.engine)
-        tables = ['conversa', 'mensagem_x', 'mensagem_y', 'avaliacao', 'proficiencia']
-        for table in tables:
-            if not inspector.has_table(table, schema='ufchatbot'):
-                # Create the schema if it doesn’t exist
-                with db.engine.connect() as connection:
-                    connection.execute(text("CREATE SCHEMA IF NOT EXISTS ufchatbot"))
-                db.create_all()
-            else:
-                print(f"Tabela {table} já existe no esquema ufchatbot.")
+        create_schema()  # Cria o schema
+        db.create_all()
 
     # Definição das rotas
     @app.route('/')

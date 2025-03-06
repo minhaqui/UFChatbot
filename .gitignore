@@ -5,3 +5,5 @@ __pycache__/
 instance/
 chat.db
 rag_data/
+visualizacao/
+visualizacao_embeddings/

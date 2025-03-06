@@ -128,7 +128,7 @@ def modelo_x_response(query, historico):
     return resposta
 
 def modelo_y_response(query, historico):
-    from app.recuperacao import search_chunks  
+    from recuperacao import search_chunks  
     # Importa a função de RAG
     key = (query, tuple((msg['remetente'], msg['conteudo']) for msg in historico))
     if key in cache_y:

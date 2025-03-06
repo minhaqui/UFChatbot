@@ -13,13 +13,13 @@ import google.generativeai as genai
 genai.configure(api_key="OPENROUTE_API_KEY")
 
 # Definição dos modelos
-KEYWORD_MODEL = "deepseek-r1:latest"  # Modelo Ollama para palavras-chave
-CLUSTER_SUMMARY_MODEL = "google/gemini-2.0-flash-thinking-exp:free"  # Modelo Gemini para resumos de clusters
+KEYWORD_MODEL = "deepseek-r1:latest-131072"  # Modelo Ollama para palavras-chave
+CLUSTER_SUMMARY_MODEL = "deepseek-r1:latest-131072"  # Modelo Gemini para resumos de clusters
 
 # Arquivo para salvar resultados parciais (keywords)
 KEYWORDS_FILE = "keywords_partial.json"
 # Limite de caracteres para o texto combinado dos clusters
-MAX_CLUSTER_TEXT_LENGTH = 10000  # Ajuste conforme necessário
+MAX_CLUSTER_TEXT_LENGTH = 50000  # Ajuste conforme necessário
 
 def run_ollama(model_name: str, prompt: str, timeout: int = 30) -> str:
     """
@@ -52,7 +52,9 @@ def get_representative_keyword(chunk_text: str) -> str:
     """
     Gera uma palavra-chave (até 2 palavras) para o chunk usando o modelo Ollama.
     """
-    prompt = f"Responda com até 2 palavra-chave que resumam o texto.\nTexto: {chunk_text}"
+    prompt = f"""Responda com até 2 palavra-chave que resumam o texto. 
+                As palavras-chave devem ser em português.
+                \nTexto: {chunk_text}"""
     result = run_ollama(KEYWORD_MODEL, prompt, timeout=30)
     return result if result else "N/A"
 
@@ -68,8 +70,9 @@ def get_cluster_summary(cluster_texts: list) -> str:
     prompt = f"Responda com até 2 frases que descrevam o tema central dos textos.\nTextos: {combined_text}"
     
     try:
-        model = genai.GenerativeModel(CLUSTER_SUMMARY_MODEL)
-        response = model.generate_content(prompt)
+        # model = genai.GenerativeModel(CLUSTER_SUMMARY_MODEL)
+        # response = model.generate_content(prompt)
+        response = run_ollama(KEYWORD_MODEL, prompt, timeout=30)
         summary = response.text.strip()
         return summary if summary else "N/A"
     except Exception as e:

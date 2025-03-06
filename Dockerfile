@@ -37,4 +37,4 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY app/ .
 
 # Comando de execução com Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "2", "--log-level", "debug", "main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "120", "--workers", "5", "--log-level", "info", "main:app"]
