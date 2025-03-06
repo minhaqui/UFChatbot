@@ -108,3 +108,8 @@ function resetChat() {
     })
     .catch(error => {});
 }
+
+// Alternar menu hamburger
+document.querySelector('.menu-toggle').addEventListener('click', function() {
+    document.querySelector('.navbar ul').classList.toggle('show');
+});

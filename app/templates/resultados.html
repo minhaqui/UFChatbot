@@ -1,23 +1,47 @@
 {% extends "base.html" %}
+{% block title %}Resultados{% endblock %}
 {% block content %}
-<div class="results-container">
-    <h1>Resultados Preliminares</h1>
-
-    <div class="section analise-descritiva">
-        <h2>Avaliações</h2>
-        {{ desc_stats|safe }}
-    </div>
-
-    <div class="section teste-hipotese">
-        <h2>Análises Estatísticas</h2>
-        {{ teste_hipotese|safe }}
-    </div>
-
-    <div class="section tabela-avaliacoes">
-        <h2>20 Últimas Avaliações</h2>
-        {{ tabela_avaliacoes|safe }}
-    </div>
-
-    <button class="refresh-button" onclick="location.reload()">Atualizar Resultados</button>
-</div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados - Comparação de LLMs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main>
+        <section>
+            <h2>Avaliações</h2>
+            <div class="table-responsive">
+                {% if desc_stats != 'Sem dados suficientes para análise.' %}
+                    {{ desc_stats | safe }}
+                {% else %}
+                    <p>{{ desc_stats }}</p>
+                {% endif %}
+            </div>
+        </section>
+        <section>
+            <h2>Análises Estatísticas</h2>
+            <div class="table-responsive">
+                {% if teste_hipotese != 'Sem dados suficientes para análise.' %}
+                    {{ teste_hipotese | safe }}
+                {% else %}
+                    <p>{{ teste_hipotese }}</p>
+                {% endif %}
+            </div>
+        </section>
+        <section>
+            <h2>Avaliações Recentes</h2>
+            <div class="table-responsive">
+                {% if tabela_avaliacoes != 'Sem dados suficientes para análise.' %}
+                    {{ tabela_avaliacoes | safe }}
+                {% else %}
+                    <p>{{ tabela_avaliacoes }}</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
 {% endblock %}
